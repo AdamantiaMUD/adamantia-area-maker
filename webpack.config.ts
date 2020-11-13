@@ -1,3 +1,4 @@
+import webpack from 'webpack';
 import HtmlWebPackPlugin from 'html-webpack-plugin';
 
 const config = {
@@ -22,14 +23,23 @@ const config = {
         ],
     },
     resolve: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        extensions: [
+            '.js',
+            '.jsx',
+            '.ts',
+            '.tsx',
+        ],
     },
     plugins: [
         new HtmlWebPackPlugin({
             template: './src/public/index.html',
             filename: './index.html',
         }),
+        new webpack.HotModuleReplacementPlugin(),
     ],
+    devServer: {
+        hot: true,
+    },
 };
 
 export default config;

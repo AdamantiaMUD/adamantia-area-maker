@@ -44,9 +44,12 @@
         "@chimericdream/eslint-config-typescript": "^5.0.1",
         "@commitlint/cli": "11.0.0",
         "@commitlint/config-conventional": "11.0.0",
+        "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
         "@types/node": "^14.14.7",
         "@types/react": "^16.9.56",
         "@types/react-dom": "^16.9.9",
+        "@types/webpack": "^4.41.25",
+        "@types/webpack-env": "^1.15.3",
         "babel-loader": "^8.2.1",
         "commitizen": "4.2.2",
         "cz-conventional-changelog": "3.3.0",
@@ -55,12 +58,12 @@
         "husky": "5.0.0-beta.0",
         "jest": "^26.6.3",
         "pinst": "2.0.0",
+        "react-refresh": "^0.9.0",
         "standard-version": "9.0.0",
-        "type-fest": "^0.18.1",
+        "type-fest": "^0.13.1",
         "typescript": "^4.0.5",
         "webpack": "^4.44.2",
-        "webpack-cli": "^4.2.0",
-        "webpack-dev-server": "^3.11.0"
+        "webpack-cli": "^4.2.0"
     },
     "config": {
         "commitizen": {
