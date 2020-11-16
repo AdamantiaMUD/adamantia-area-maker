@@ -1,3 +1,7 @@
+/* global __dirname */
+
+/* eslint-disable-next-line import/no-nodejs-modules */
+import path from 'path';
 import webpack from 'webpack';
 import HtmlWebPackPlugin from 'html-webpack-plugin';
 
@@ -23,6 +27,9 @@ const config = {
         ],
     },
     resolve: {
+        alias: {
+            '~': path.resolve(__dirname, 'src', 'app'),
+        },
         extensions: [
             '.js',
             '.jsx',
