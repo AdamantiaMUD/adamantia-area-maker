@@ -5,6 +5,7 @@ import {useDebounce} from 'use-debounce';
 import type {FC} from 'react';
 
 import {DEBOUNCE_DELAY_FAST, GRID_BUFFER, GRID_SIZE} from '~/constants';
+import {getSnappedCoordinate} from '~/utils/grid';
 
 import type {Position} from '~/interfaces';
 
@@ -18,18 +19,25 @@ export const BackgroundGrid: FC<ComponentProps> = ({stageCoords}: ComponentProps
     const [throttledX] = useDebounce(x, DEBOUNCE_DELAY_FAST);
     const [throttledY] = useDebounce(y, DEBOUNCE_DELAY_FAST);
 
+    console.log(`x: '${throttledX}', y: '${throttledY}'`);
+
     const {
         startX,
         endX,
         startY,
         endY,
     } = useMemo(
-        () => ({
-            startX: -throttledX - GRID_BUFFER,
-            endX: -throttledX + window.innerWidth + GRID_BUFFER,
-            startY: -throttledY - GRID_BUFFER,
-            endY: -throttledY + window.innerHeight + GRID_BUFFER,
-        }),
+        () => {
+            const snappedX = getSnappedCoordinate(throttledX);
+            const snappedY = getSnappedCoordinate(throttledY);
+
+            return {
+                startX: (-1 * snappedX) - GRID_BUFFER,
+                endX: (-1 * snappedX) + window.innerWidth + GRID_BUFFER,
+                startY: (-1 * snappedY) - GRID_BUFFER,
+                endY: (-1 * snappedY) + window.innerHeight + GRID_BUFFER,
+            };
+        },
         [throttledX, throttledY]
     );
 

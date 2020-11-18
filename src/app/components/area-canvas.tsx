@@ -1,27 +1,30 @@
 import React, {
     useCallback,
-    useContext,
     useRef,
     useState,
 } from 'react';
-import {Stage, Layer} from 'react-konva';
-import type Konva from 'konva';
+import {Stage} from 'react-konva';
 import {useDebouncedCallback} from 'use-debounce';
 
+import type Konva from 'konva';
 import type {FC} from 'react';
 
 import BackgroundGrid from '~/components/background-grid';
 import ControlPanel from '~/components/control-panel';
 import Portal from '~/components/general/portal';
-import {AreaContext} from '~/area-context-provider';
+import RoomLayer from '~/components/room-layer';
 import {DEBOUNCE_DELAY_SLOW} from '~/constants';
 
-import type {Position} from '~/interfaces';
+import type {AreaCtx, Position} from '~/interfaces';
 
-const AreaCanvas: FC = () => {
+interface ComponentProps {
+    areaCtx: AreaCtx;
+}
+
+const AreaCanvas: FC<ComponentProps> = ({areaCtx}: ComponentProps) => {
     const [stageCoords, setStageCoords] = useState<Position>({x: 0, y: 0});
 
-    const {setSelectedId} = useContext(AreaContext);
+    const {setSelectedId} = areaCtx;
 
     const stageRef = useRef<Konva.Stage | null>(null);
 
@@ -39,7 +42,7 @@ const AreaCanvas: FC = () => {
         (e: Konva.KonvaEventObject<DragEvent>) => {
             const target = e.target;
 
-            if (target.parent === null) {
+            if (target.children.length > 0) {
                 const {x, y} = target.attrs as Position;
                 setStageCoords({x, y});
             }
@@ -61,9 +64,9 @@ const AreaCanvas: FC = () => {
         >
             <BackgroundGrid stageCoords={stageCoords} />
             <Portal>
-                <ControlPanel />
+                <ControlPanel stageCoords={stageCoords} areaCtx={areaCtx} />
             </Portal>
-            <Layer />
+            <RoomLayer areaCtx={areaCtx} />
         </Stage>
     );
 };
