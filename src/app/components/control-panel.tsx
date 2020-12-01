@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import {useDebounce} from 'use-debounce';
 
 import type {FC} from 'react';
+
 import RoomInfo from '~/components/rooms/room-info';
 
 import {DEBOUNCE_DELAY_SLOW, GRID_SIZE} from '~/constants';

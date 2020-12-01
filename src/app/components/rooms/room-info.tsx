@@ -1,7 +1,9 @@
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import {makeStyles} from '@material-ui/core/styles';
 
 import type {FC} from 'react';
+import type {Theme} from '@material-ui/core';
 
 import type {RoomNode} from '~/interfaces';
 
@@ -9,21 +11,43 @@ interface ComponentProps {
     room: RoomNode;
 }
 
-export const RoomInfo: FC<ComponentProps> = ({room}: ComponentProps) => (
-    <React.Fragment>
-        <Typography>
-            {'ID: '}
-            {room.id}
-        </Typography>
-        <Typography>
-            {'Title: '}
-            {room.roomDef.title}
-        </Typography>
-        <Typography>
-            {'Desc: '}
-            {room.roomDef.description}
-        </Typography>
-    </React.Fragment>
-);
+const useStyles = makeStyles((theme: Theme) => ({
+    root: {
+        '& > *': {
+            marginBottom: theme.spacing(2),
+        },
+        '& > *:last-child': {
+            marginBottom: 0,
+        },
+    },
+}));
+
+export const RoomInfo: FC<ComponentProps> = ({room}: ComponentProps) => {
+    const classes = useStyles();
+
+    return (
+        <div className={classes.root}>
+            <TextField
+                disabled
+                fullWidth
+                label="ID"
+                value={room.id}
+            />
+            <TextField
+                fullWidth
+                label="Title"
+                value={room.roomDef.title}
+            />
+            <TextField
+                fullWidth
+                multiline
+                label="Description"
+                rows={4}
+                value={room.roomDef.description}
+                variant="outlined"
+            />
+        </div>
+    );
+};
 
 export default RoomInfo;
