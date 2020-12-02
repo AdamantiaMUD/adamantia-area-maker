@@ -29,11 +29,13 @@ export const RoomInfo: FC<ComponentProps> = ({room}: ComponentProps) => {
                 fullWidth
                 label="ID"
                 value={room.id}
+                size="small"
             />
             <TextField
                 fullWidth
                 label="Title"
                 value={room.roomDef.title}
+                size="small"
             />
             <TextField
                 fullWidth
@@ -42,6 +44,7 @@ export const RoomInfo: FC<ComponentProps> = ({room}: ComponentProps) => {
                 rows={4}
                 value={room.roomDef.description}
                 variant="outlined"
+                size="small"
             />
         </div>
     );

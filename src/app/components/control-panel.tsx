@@ -1,4 +1,5 @@
 import React, {useCallback, useMemo} from 'react';
+import TextField from '@material-ui/core/TextField';
 import {makeStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -7,15 +8,16 @@ import Typography from '@material-ui/core/Typography';
 import {useDebounce} from 'use-debounce';
 
 import type {FC} from 'react';
-import DeleteRoomButton from '~/components/rooms/delete-room-button';
+import type {Theme} from '@material-ui/core';
 
+import DeleteRoomButton from '~/components/rooms/delete-room-button';
 import RoomInfo from '~/components/rooms/room-info';
 
 import {DEBOUNCE_DELAY_SLOW, GRID_SIZE} from '~/constants';
 
 import type {AreaCtx, Position, RoomNode} from '~/interfaces';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => ({
     root: {
         width: '32rem',
         position: 'absolute',
@@ -25,7 +27,15 @@ const useStyles = makeStyles({
     divider: {
         marginTop: '1rem',
     },
-});
+    areaName: {
+        marginBottom: theme.spacing(1),
+    },
+    foo: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+}));
 
 interface ComponentProps {
     areaCtx: AreaCtx;
@@ -66,9 +76,22 @@ export const ControlPanel: FC<ComponentProps> = ({areaCtx, stageCoords}: Compone
                 <Typography variant="h5" component="h1" gutterBottom>
                     AdamantiaMUD Area Maker
                 </Typography>
-                <Button variant="contained" onClick={add}>
-                    Add Room
-                </Button>
+                <hr className={classes.divider} />
+                <Typography variant="h6" component="h3" gutterBottom>
+                    Area
+                </Typography>
+                <TextField
+                    fullWidth
+                    className={classes.areaName}
+                    label="Name"
+                    size="small"
+                />
+                <div className={classes.foo}>
+                    <Typography>{`Rooms: ${rooms.length}`}</Typography>
+                    <Button variant="outlined" onClick={add} size="small">
+                        Add Room
+                    </Button>
+                </div>
                 {selectedRoom !== null && (
                     <React.Fragment>
                         <hr className={classes.divider} />

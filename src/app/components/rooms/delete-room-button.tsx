@@ -60,6 +60,7 @@ export const DeleteRoomButton: FC<ComponentProps> = ({areaCtx}: ComponentProps) 
                     color="secondary"
                     startIcon={(<DeleteIcon />)}
                     onClick={openDialog}
+                    size="small"
                 >
                     Delete Room
                 </Button>
