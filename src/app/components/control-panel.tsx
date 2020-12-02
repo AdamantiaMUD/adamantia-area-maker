@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import {useDebounce} from 'use-debounce';
 
 import type {FC} from 'react';
+import DeleteRoomButton from '~/components/rooms/delete-room-button';
 
 import RoomInfo from '~/components/rooms/room-info';
 
@@ -35,6 +36,7 @@ export const ControlPanel: FC<ComponentProps> = ({areaCtx, stageCoords}: Compone
     const [coords] = useDebounce(stageCoords, DEBOUNCE_DELAY_SLOW);
 
     const {addRoom, rooms, selectedId} = areaCtx;
+
     const add = useCallback(
         () => {
             const x = -1 * (coords.x - (2 * GRID_SIZE));
@@ -74,6 +76,7 @@ export const ControlPanel: FC<ComponentProps> = ({areaCtx, stageCoords}: Compone
                             Selected Room
                         </Typography>
                         <RoomInfo room={selectedRoom} />
+                        <DeleteRoomButton areaCtx={areaCtx} />
                     </React.Fragment>
                 )}
             </CardContent>
