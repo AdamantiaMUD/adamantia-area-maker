@@ -3,7 +3,7 @@ import {Layer} from 'react-konva';
 
 import type {FC} from 'react';
 
-import Room from '~/components/room';
+import Room from '~/components/rooms/room';
 
 import type {AreaCtx, RoomNode} from '~/interfaces';
 

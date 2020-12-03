@@ -12,7 +12,7 @@ import type {FC} from 'react';
 import BackgroundGrid from '~/components/background-grid';
 import ControlPanel from '~/components/control-panel';
 import Portal from '~/components/general/portal';
-import RoomLayer from '~/components/room-layer';
+import RoomLayer from '~/components/rooms/room-layer';
 import {DEBOUNCE_DELAY_SLOW} from '~/constants';
 
 import type {AreaCtx, Position} from '~/interfaces';
