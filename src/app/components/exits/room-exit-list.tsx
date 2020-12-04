@@ -6,7 +6,7 @@ import {createStyles, makeStyles} from '@material-ui/core/styles';
 
 import type {FC} from 'react';
 
-import AddRemoveExitButton from '~/components/rooms/add-remove-exit-button';
+import AddRemoveExitButton from '~/components/exits/add-remove-exit-button';
 
 import type {RoomNode} from '~/interfaces';
 
@@ -21,7 +21,7 @@ const useStyles = makeStyles(() => createStyles({
     },
 }));
 
-export const RoomExits: FC<ComponentProps> = ({room}: ComponentProps) => {
+export const RoomExitList: FC<ComponentProps> = ({room}: ComponentProps) => {
     const classes = useStyles();
 
     return (
@@ -58,4 +58,4 @@ export const RoomExits: FC<ComponentProps> = ({room}: ComponentProps) => {
     );
 };
 
-export default RoomExits;
+export default RoomExitList;

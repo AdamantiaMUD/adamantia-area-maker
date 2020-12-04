@@ -8,7 +8,7 @@ import type {Theme} from '@material-ui/core';
 import invariant from 'tiny-invariant';
 import {ControlPanelContext} from '~/components/control-panel/context-provider';
 
-import RoomExits from '~/components/rooms/room-exits';
+import RoomExitList from '~/components/exits/room-exit-list';
 
 import type {AreaCtx, RoomNode} from '~/interfaces';
 
@@ -64,7 +64,7 @@ export const RoomInfo: FC<ComponentProps> = ({room}: ComponentProps) => {
                     <Typography variant="h6" component="h3" gutterBottom>
                         Exits
                     </Typography>
-                    <RoomExits room={room} />
+                    <RoomExitList room={room} />
                 </React.Fragment>
             )}
         </div>

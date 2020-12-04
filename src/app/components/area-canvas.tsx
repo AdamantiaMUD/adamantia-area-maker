@@ -10,7 +10,7 @@ import type Konva from 'konva';
 import type {FC} from 'react';
 
 import BackgroundGrid from '~/components/background-grid';
-import ControlPanel from '~/components/control-panel';
+import ControlPanel from '~/components/control-panel/control-panel';
 import Portal from '~/components/general/portal';
 import RoomLayer from '~/components/rooms/room-layer';
 import {DEBOUNCE_DELAY_SLOW} from '~/constants';
