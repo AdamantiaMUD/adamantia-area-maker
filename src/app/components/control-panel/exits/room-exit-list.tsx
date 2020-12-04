@@ -6,7 +6,7 @@ import {createStyles, makeStyles} from '@material-ui/core/styles';
 
 import type {FC} from 'react';
 
-import AddRemoveExitButton from '~/components/exits/add-remove-exit-button';
+import AddRemoveExitButton from '~/components/control-panel/exits/add-remove-exit-button';
 
 import type {RoomNode} from '~/interfaces';
 

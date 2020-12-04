@@ -9,10 +9,10 @@ import {useDebouncedCallback} from 'use-debounce';
 import type Konva from 'konva';
 import type {FC} from 'react';
 
-import BackgroundGrid from '~/components/background-grid';
+import BackgroundGrid from '~/components/canvas/background-grid';
 import ControlPanel from '~/components/control-panel/control-panel';
 import Portal from '~/components/general/portal';
-import RoomLayer from '~/components/rooms/room-layer';
+import RoomLayer from '~/components/canvas/rooms/room-layer';
 import {DEBOUNCE_DELAY_SLOW} from '~/constants';
 
 import type {AreaCtx, Position} from '~/interfaces';

@@ -11,8 +11,8 @@ import type {FC} from 'react';
 import type {Theme} from '@material-ui/core';
 
 import ControlPanelContextProvider from '~/components/control-panel/context-provider';
-import DeleteRoomButton from '~/components/rooms/delete-room-button';
-import RoomInfo from '~/components/rooms/room-info';
+import DeleteRoomButton from '~/components/control-panel/rooms/delete-room-button';
+import RoomInfo from '~/components/control-panel/rooms/room-info';
 
 import {DEBOUNCE_DELAY_SLOW, GRID_SIZE} from '~/constants';
 

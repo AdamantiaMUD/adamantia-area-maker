@@ -8,7 +8,7 @@ import type {Theme} from '@material-ui/core';
 import invariant from 'tiny-invariant';
 import {ControlPanelContext} from '~/components/control-panel/context-provider';
 
-import RoomExitList from '~/components/exits/room-exit-list';
+import RoomExitList from '~/components/control-panel/exits/room-exit-list';
 
 import type {AreaCtx, RoomNode} from '~/interfaces';
 

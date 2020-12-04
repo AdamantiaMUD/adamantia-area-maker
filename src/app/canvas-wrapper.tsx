@@ -3,7 +3,7 @@ import {v4 as uuid} from 'uuid';
 
 import type {FC} from 'react';
 
-import AreaCanvas from '~/components/area-canvas';
+import AreaCanvas from '~/components/canvas/area-canvas';
 import {getSnappedCoords} from '~/utils/grid';
 
 import type {AreaCtx, Position, RoomNode} from '~/interfaces';
