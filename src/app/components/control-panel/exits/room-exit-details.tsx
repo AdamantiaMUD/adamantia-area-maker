@@ -3,17 +3,18 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import invariant from 'tiny-invariant';
 import {createStyles, makeStyles} from '@material-ui/core/styles';
+import produce from 'immer';
 
 import type {AutocompleteProps, AutocompleteRenderInputParams} from '@material-ui/lab/Autocomplete';
-import type {FC} from 'react';
+import type {FC, SyntheticEvent} from 'react';
 import type {Direction, RoomDefinition, RoomExitDefinition} from '@adamantiamud/core';
-import type {Theme} from '@material-ui/core';
+import type {Draft} from 'immer';
+import type {Theme, Value} from '@material-ui/core';
 
 import {ControlPanelContext} from '~/components/control-panel/context-provider';
-import {ExitDirection} from '~/interfaces';
 import {cast} from '~/utils/fns';
 
-import type {AreaCtx, RoomNode} from '~/interfaces';
+import type {AreaCtx, ExitDirection, RoomNode} from '~/interfaces';
 
 interface ComponentProps {
     direction: ExitDirection;
@@ -70,19 +71,6 @@ export const RoomExitDetails: FC<ComponentProps> = ({direction, room}: Component
         [roomExit, rooms]
     );
 
-    const exitRoomDirection = useMemo<ExitDirection | undefined>(
-        () => {
-            if (exitRoom === undefined) {
-                return undefined;
-            }
-
-            const foundExit = exitRoom.exits?.find((exit: RoomExitDefinition) => exit.roomId === roomDef.id);
-
-            return cast<ExitDirection>(foundExit?.direction);
-        },
-        [exitRoom, roomDef]
-    );
-
     if (roomExit === null) {
         return null;
     }
@@ -99,33 +87,19 @@ export const RoomExitDetails: FC<ComponentProps> = ({direction, room}: Component
         className: classes.roomSelect,
         disableClearable: true,
         size: 'small',
+        onChange: (event: SyntheticEvent, newValue: Value<RoomDefinition, false, true, false>) => {
+            const foundExitIdx = roomDef.exits!
+                .findIndex((exit: RoomExitDefinition) => exit.direction === cast<Direction>(direction));
+
+            if (foundExitIdx > -1) {
+                updateRoom(produce(room, (draft: Draft<RoomNode>) => {
+                    draft.roomDef.exits![foundExitIdx].roomId = newValue.id;
+                }));
+            }
+        },
     };
 
-    const dirSelectProps: AutocompleteProps<ExitDirection, false, true, false> = {
-        id: '',
-        options: [
-            ExitDirection.NORTH,
-            ExitDirection.EAST,
-            ExitDirection.SOUTH,
-            ExitDirection.WEST,
-        ],
-        getOptionLabel: (option: ExitDirection) => `${option[0].toUpperCase()}${option.slice(1)}`,
-        /* eslint-disable-next-line react/no-multi-comp */
-        renderInput: (params: AutocompleteRenderInputParams) => (
-            <TextField {...params} size="small" variant="standard" />
-        ),
-        value: exitRoomDirection,
-        className: classes.dirSelect,
-        disableClearable: true,
-        size: 'small',
-    };
-
-    return (
-        <div className={classes.root}>
-            <Autocomplete {...roomSelectProps} />
-            <Autocomplete {...dirSelectProps} />
-        </div>
-    );
+    return (<Autocomplete {...roomSelectProps} />);
 };
 
 export default RoomExitDetails;
