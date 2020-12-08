@@ -7,6 +7,8 @@ import {createStyles, makeStyles} from '@material-ui/core/styles';
 import type {FC} from 'react';
 
 import AddRemoveExitButton from '~/components/control-panel/exits/add-remove-exit-button';
+import RoomExitDetails from '~/components/control-panel/exits/room-exit-details';
+import {ExitDirection} from '~/interfaces';
 
 import type {RoomNode} from '~/interfaces';
 
@@ -16,7 +18,9 @@ interface ComponentProps {
 
 const useStyles = makeStyles(() => createStyles({
     root: {
+        marginBottom: 0,
         marginTop: 0,
+        paddingBottom: 0,
         paddingTop: 0,
     },
 }));
@@ -29,30 +33,30 @@ export const RoomExitList: FC<ComponentProps> = ({room}: ComponentProps) => {
             <ListItem>
                 <ListItemText
                     primary="North"
-                    secondary=""
+                    secondary={(<RoomExitDetails direction={ExitDirection.NORTH} room={room} />)}
                 />
-                <AddRemoveExitButton direction="north" room={room} />
+                <AddRemoveExitButton direction={ExitDirection.NORTH} room={room} />
             </ListItem>
             <ListItem>
                 <ListItemText
                     primary="East"
-                    secondary=""
+                    secondary={(<RoomExitDetails direction={ExitDirection.EAST} room={room} />)}
                 />
-                <AddRemoveExitButton direction="east" room={room} />
+                <AddRemoveExitButton direction={ExitDirection.EAST} room={room} />
             </ListItem>
             <ListItem>
                 <ListItemText
                     primary="South"
-                    secondary=""
+                    secondary={(<RoomExitDetails direction={ExitDirection.SOUTH} room={room} />)}
                 />
-                <AddRemoveExitButton direction="south" room={room} />
+                <AddRemoveExitButton direction={ExitDirection.SOUTH} room={room} />
             </ListItem>
             <ListItem>
                 <ListItemText
                     primary="West"
-                    secondary=""
+                    secondary={(<RoomExitDetails direction={ExitDirection.WEST} room={room} />)}
                 />
-                <AddRemoveExitButton direction="west" room={room} />
+                <AddRemoveExitButton direction={ExitDirection.WEST} room={room} />
             </ListItem>
         </List>
     );

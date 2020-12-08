@@ -1,5 +1,4 @@
 import React, {useCallback, useContext, useState} from 'react';
-import {createStyles, makeStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Dialog from '@material-ui/core/Dialog';
@@ -15,13 +14,6 @@ import {ControlPanelContext} from '~/components/control-panel/context-provider';
 
 import type {AreaCtx} from '~/interfaces';
 
-const useStyles = makeStyles(() => createStyles({
-    btnWrapper: {
-        display: 'flex',
-        justifyContent: 'end',
-    },
-}));
-
 export const DeleteRoomButton: FC = () => {
     const areaCtx = useContext<AreaCtx | null>(ControlPanelContext);
 
@@ -30,8 +22,6 @@ export const DeleteRoomButton: FC = () => {
     const {removeRoom, selectedId} = areaCtx;
 
     const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
-
-    const classes = useStyles();
 
     const closeDialog = useCallback(
         () => setDialogOpen(false),
@@ -54,17 +44,15 @@ export const DeleteRoomButton: FC = () => {
 
     return (
         <React.Fragment>
-            <div className={classes.btnWrapper}>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    startIcon={(<DeleteIcon />)}
-                    onClick={openDialog}
-                    size="small"
-                >
-                    Delete Room
-                </Button>
-            </div>
+            <Button
+                variant="contained"
+                color="secondary"
+                startIcon={(<DeleteIcon />)}
+                onClick={openDialog}
+                size="small"
+            >
+                Delete Room
+            </Button>
 
             <Dialog
                 open={isDialogOpen}

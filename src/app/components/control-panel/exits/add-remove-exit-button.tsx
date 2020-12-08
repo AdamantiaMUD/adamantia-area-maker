@@ -2,20 +2,21 @@ import React, {useCallback, useContext, useMemo} from 'react';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import invariant from 'tiny-invariant';
 import produce from 'immer';
 
 import type {Draft} from 'immer';
 import type {FC} from 'react';
-import type {RoomExitDefinition} from '@adamantiamud/core';
+import type {Direction, RoomExitDefinition} from '@adamantiamud/core';
 
 import {ControlPanelContext} from '~/components/control-panel/context-provider';
+import {cast} from '~/utils/fns';
 
-import type {AreaCtx, RoomNode} from '~/interfaces';
+import type {AreaCtx, ExitDirection, RoomNode} from '~/interfaces';
 
 interface ComponentProps {
-    direction: 'north' | 'east' | 'south' | 'west';
+    direction: ExitDirection;
     room: RoomNode;
 }
 
@@ -29,7 +30,7 @@ export const AddRemoveExitButton: FC<ComponentProps> = ({direction, room}: Compo
     const {roomDef} = room;
 
     const roomExit = useMemo<RoomExitDefinition | null>(
-        () => roomDef.exits?.find((exit: RoomExitDefinition) => exit.direction === direction) ?? null,
+        () => roomDef.exits?.find((exit: RoomExitDefinition) => exit.direction === cast<Direction>(direction)) ?? null,
         [direction, roomDef.exits]
     );
 
@@ -38,7 +39,7 @@ export const AddRemoveExitButton: FC<ComponentProps> = ({direction, room}: Compo
             draft.roomDef.exits = draft.roomDef.exits ?? [];
 
             draft.roomDef.exits.push({
-                direction: direction,
+                direction: cast<Direction>(direction),
                 roomId: draft.roomDef.id,
             });
         })),
@@ -52,7 +53,7 @@ export const AddRemoveExitButton: FC<ComponentProps> = ({direction, room}: Compo
     const removeExit = useCallback(
         (): void => updateRoom(produce(room, (draft: Draft<RoomNode>) => {
             draft.roomDef.exits = (draft.roomDef.exits ?? [])
-                .filter((exit: RoomExitDefinition): boolean => exit.direction !== direction);
+                .filter((exit: RoomExitDefinition): boolean => exit.direction !== cast<Direction>(direction));
         })),
         [
             direction,
@@ -62,7 +63,7 @@ export const AddRemoveExitButton: FC<ComponentProps> = ({direction, room}: Compo
     );
 
     return (
-        <ListItemSecondaryAction>
+        <ListItemIcon>
             {roomExit === null && (
                 <IconButton edge="end" aria-label="add" onClick={addExit}>
                     <AddCircleIcon />
@@ -73,7 +74,7 @@ export const AddRemoveExitButton: FC<ComponentProps> = ({direction, room}: Compo
                     <DeleteIcon />
                 </IconButton>
             )}
-        </ListItemSecondaryAction>
+        </ListItemIcon>
     );
 };
 

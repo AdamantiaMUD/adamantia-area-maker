@@ -14,20 +14,24 @@ export const CanvasWrapper: FC = () => {
 
     const addRoom = useCallback(
         (coords: Position): void => {
-            setRooms((prev: RoomNode[]): RoomNode[] => [
-                ...prev,
-                {
-                    id: uuid(),
-                    color: '#666',
-                    coords: getSnappedCoords(coords),
-                    roomDef: {
-                        id: '',
-                        title: 'New Room',
-                        description: '',
+            setRooms((prev: RoomNode[]): RoomNode[] => {
+                const newId = uuid();
+
+                return [
+                    ...prev,
+                    {
+                        id: newId,
+                        color: '#666',
+                        coords: getSnappedCoords(coords),
+                        roomDef: {
+                            id: newId,
+                            title: 'New Room',
+                            description: '',
+                        },
+                        lastUpdate: Date.now(),
                     },
-                    lastUpdate: Date.now(),
-                },
-            ]);
+                ];
+            });
         },
         [setRooms]
     );
@@ -60,6 +64,8 @@ export const CanvasWrapper: FC = () => {
         }),
         [setRooms]
     );
+
+    const updateRoomDef = useCallback(() => {}, []);
 
     const ctx: AreaCtx = {
         addRoom,

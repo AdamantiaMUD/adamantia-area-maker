@@ -1,5 +1,12 @@
 import type {RoomDefinition} from '@adamantiamud/core';
 
+export enum ExitDirection {
+    NORTH = 'north',
+    EAST = 'east',
+    SOUTH = 'south',
+    WEST = 'west',
+}
+
 export interface Position {
     x: number;
     y: number;
