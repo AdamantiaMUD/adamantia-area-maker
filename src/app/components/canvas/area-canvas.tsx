@@ -5,6 +5,7 @@ import React, {
 } from 'react';
 import {Stage} from 'react-konva';
 import {useDebouncedCallback} from 'use-debounce';
+import {useRecoilBridgeAcrossReactRoots_UNSTABLE, useSetRecoilState} from 'recoil';
 
 import type Konva from 'konva';
 import type {FC} from 'react';
@@ -14,19 +15,16 @@ import ControlPanel from '~/components/control-panel/control-panel';
 import Portal from '~/components/general/portal';
 import RoomLayer from '~/components/canvas/rooms/room-layer';
 import {DEBOUNCE_DELAY_SLOW} from '~/constants';
+import {selectedRoomState} from '~/state/rooms-state';
 
-import type {AreaCtx, Position} from '~/interfaces';
+import type {Position} from '~/interfaces';
 
-interface ComponentProps {
-    areaCtx: AreaCtx;
-}
-
-const AreaCanvas: FC<ComponentProps> = ({areaCtx}: ComponentProps) => {
+const AreaCanvas: FC = () => {
     const [stageCoords, setStageCoords] = useState<Position>({x: 0, y: 0});
-
-    const {setSelectedId} = areaCtx;
-
     const stageRef = useRef<Konva.Stage | null>(null);
+    const RecoilBridge = useRecoilBridgeAcrossReactRoots_UNSTABLE();
+
+    const setSelectedId = useSetRecoilState(selectedRoomState);
 
     const selectItem = useCallback(
         (e: Konva.KonvaEventObject<MouseEvent>, itemId: string): void => {
@@ -62,11 +60,13 @@ const AreaCanvas: FC<ComponentProps> = ({areaCtx}: ComponentProps) => {
                 stageRef.current = el;
             }}
         >
-            <BackgroundGrid stageCoords={stageCoords} />
-            <Portal>
-                <ControlPanel stageCoords={stageCoords} areaCtx={areaCtx} />
-            </Portal>
-            <RoomLayer areaCtx={areaCtx} />
+            <RecoilBridge>
+                <BackgroundGrid stageCoords={stageCoords} />
+                <Portal>
+                    <ControlPanel stageCoords={stageCoords} />
+                </Portal>
+                <RoomLayer />
+            </RecoilBridge>
         </Stage>
     );
 };

@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 import ReactDOM from 'react-dom';
+import {useRecoilBridgeAcrossReactRoots_UNSTABLE} from 'recoil';
 
 import type {FC, PropsWithChildren as PWC} from 'react';
 
@@ -7,6 +8,7 @@ import type {FC, PropsWithChildren as PWC} from 'react';
 export const Portal: FC = (props: PWC<{}>) => {
     const {children} = props;
     const defaultNode = useRef<HTMLDivElement | null>(null);
+    const RecoilBridge = useRecoilBridgeAcrossReactRoots_UNSTABLE();
 
     const renderPortal = useCallback(() => {
         if (defaultNode.current === null) {
@@ -20,7 +22,7 @@ export const Portal: FC = (props: PWC<{}>) => {
 
         ReactDOM.render(
             /* eslint-disable-next-line react/jsx-no-useless-fragment */
-            (<React.Fragment>{children}</React.Fragment>),
+            (<RecoilBridge>{children}</RecoilBridge>),
             defaultNode.current
         );
     }, [children]);

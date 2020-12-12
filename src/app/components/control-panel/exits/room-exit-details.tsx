@@ -1,9 +1,9 @@
-import React, {useContext, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
-import invariant from 'tiny-invariant';
 import {createStyles, makeStyles} from '@material-ui/core/styles';
 import produce from 'immer';
+import {useRecoilValue} from 'recoil';
 
 import type {AutocompleteProps, AutocompleteRenderInputParams} from '@material-ui/lab/Autocomplete';
 import type {FC, SyntheticEvent} from 'react';
@@ -11,10 +11,11 @@ import type {Direction, RoomDefinition, RoomExitDefinition} from '@adamantiamud/
 import type {Draft} from 'immer';
 import type {Theme, Value} from '@material-ui/core';
 
-import {ControlPanelContext} from '~/components/control-panel/context-provider';
+import useUpdateRoom from '~/hooks/use-update-room';
 import {cast} from '~/utils/fns';
+import {roomsList} from '~/state/rooms-state';
 
-import type {AreaCtx, ExitDirection, RoomNode} from '~/interfaces';
+import type {ExitDirection, RoomNode} from '~/interfaces';
 
 interface ComponentProps {
     direction: ExitDirection;
@@ -35,11 +36,8 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }));
 
 export const RoomExitDetails: FC<ComponentProps> = ({direction, room}: ComponentProps) => {
-    const areaCtx = useContext<AreaCtx | null>(ControlPanelContext);
-
-    invariant(areaCtx, 'This component must be used in the Control Panel');
-
-    const {rooms, updateRoom} = areaCtx;
+    const rooms = useRecoilValue(roomsList);
+    const updateRoom = useUpdateRoom();
 
     const classes = useStyles();
 

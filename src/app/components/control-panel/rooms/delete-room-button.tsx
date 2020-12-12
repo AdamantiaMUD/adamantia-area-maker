@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Dialog from '@material-ui/core/Dialog';
@@ -6,20 +6,16 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import invariant from 'tiny-invariant';
+import {useRecoilValue} from 'recoil';
 
 import type {FC} from 'react';
 
-import {ControlPanelContext} from '~/components/control-panel/context-provider';
-
-import type {AreaCtx} from '~/interfaces';
+import useRemoveRoom from '~/hooks/use-remove-room';
+import {selectedRoomState} from '~/state/rooms-state';
 
 export const DeleteRoomButton: FC = () => {
-    const areaCtx = useContext<AreaCtx | null>(ControlPanelContext);
-
-    invariant(areaCtx, 'This component must be used in the Control Panel');
-
-    const {removeRoom, selectedId} = areaCtx;
+    const removeRoom = useRemoveRoom();
+    const selectedId = useRecoilValue(selectedRoomState);
 
     const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
 

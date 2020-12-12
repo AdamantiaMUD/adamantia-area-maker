@@ -1,19 +1,18 @@
-import React, {useCallback, useContext, useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import invariant from 'tiny-invariant';
 import produce from 'immer';
 
 import type {Draft} from 'immer';
 import type {FC} from 'react';
 import type {Direction, RoomExitDefinition} from '@adamantiamud/core';
 
-import {ControlPanelContext} from '~/components/control-panel/context-provider';
+import useUpdateRoom from '~/hooks/use-update-room';
 import {cast} from '~/utils/fns';
 
-import type {AreaCtx, ExitDirection, RoomNode} from '~/interfaces';
+import type {ExitDirection, RoomNode} from '~/interfaces';
 
 interface ComponentProps {
     direction: ExitDirection;
@@ -21,13 +20,9 @@ interface ComponentProps {
 }
 
 export const AddRemoveExitButton: FC<ComponentProps> = ({direction, room}: ComponentProps) => {
-    const areaCtx = useContext<AreaCtx | null>(ControlPanelContext);
-
-    invariant(areaCtx, 'This component must be used in the Control Panel');
-
-    const {updateRoom} = areaCtx;
-
     const {roomDef} = room;
+
+    const updateRoom = useUpdateRoom();
 
     const roomExit = useMemo<RoomExitDefinition | null>(
         () => roomDef.exits?.find((exit: RoomExitDefinition) => exit.direction === cast<Direction>(direction)) ?? null,

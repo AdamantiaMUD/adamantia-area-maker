@@ -1,32 +1,29 @@
 import React, {useCallback, useState} from 'react';
 import {Rect} from 'react-konva';
+import {useRecoilState} from 'recoil';
 import {useDebounce, useDebouncedCallback} from 'use-debounce';
 
 import type Konva from 'konva';
 import type {FC} from 'react';
 
+import useUpdateRoom from '~/hooks/use-update-room';
 import {DEBOUNCE_DELAY_FAST, GRID_SIZE} from '~/constants';
 import {getSnappedCoordinate, getSnappedCoords} from '~/utils/grid';
+import {selectedRoomState} from '~/state/rooms-state';
 
 import type {Position, RoomNode} from '~/interfaces';
 
 interface ComponentProps {
-    isSelected: boolean;
     node: RoomNode;
-    selectRoom: (roomId: string) => void;
-    updateRoom: (room: RoomNode) => void;
 }
 
 export const Room: FC<ComponentProps> = (props: ComponentProps) => {
-    const {
-        isSelected,
-        node,
-        selectRoom,
-        updateRoom,
-    } = props;
+    const {node} = props;
 
+    const [selectedRoomId, setSelectedRoom] = useRecoilState(selectedRoomState);
     const [isDragging, setIsDragging] = useState<boolean>(false);
     const [dragCoords, setDragCoords] = useState<Position>(node.coords);
+    const updateRoom = useUpdateRoom();
 
     const [[shadowX, shadowY]] = useDebounce<[number, number]>(
         [getSnappedCoordinate(dragCoords.x), getSnappedCoordinate(dragCoords.y)],
@@ -52,9 +49,9 @@ export const Room: FC<ComponentProps> = (props: ComponentProps) => {
             /* eslint-disable-next-line no-param-reassign */
             e.cancelBubble = true;
 
-            selectRoom(node.id);
+            setSelectedRoom(node.id);
         },
-        [node.id, selectRoom]
+        [node.id, setSelectedRoom]
     );
 
     const dragEnd = useCallback(
@@ -85,6 +82,8 @@ export const Room: FC<ComponentProps> = (props: ComponentProps) => {
         },
         [setIsDragging]
     );
+
+    const isSelected = selectedRoomId === node.id;
 
     return (
         <React.Fragment>
