@@ -19,8 +19,6 @@ export const BackgroundGrid: FC<ComponentProps> = ({stageCoords}: ComponentProps
     const [throttledX] = useDebounce(x, DEBOUNCE_DELAY_FAST);
     const [throttledY] = useDebounce(y, DEBOUNCE_DELAY_FAST);
 
-    console.log(`x: '${throttledX}', y: '${throttledY}'`);
-
     const {
         startX,
         endX,

@@ -1,10 +1,14 @@
 /* global module */
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {RecoilRoot} from 'recoil';
 
-import CanvasWrapper from '~/canvas-wrapper';
+import AreaCanvas from '~/components/canvas/area-canvas';
 
-ReactDOM.render((<CanvasWrapper />), document.getElementById('root'));
+ReactDOM.render(
+    (<RecoilRoot><AreaCanvas /></RecoilRoot>),
+    document.getElementById('root')
+);
 
 if (typeof module.hot !== 'undefined') {
     module.hot.accept();

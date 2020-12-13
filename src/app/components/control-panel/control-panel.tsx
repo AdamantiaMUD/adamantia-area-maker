@@ -6,16 +6,17 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import {useDebounce} from 'use-debounce';
+import {useRecoilValue} from 'recoil';
 
 import type {FC} from 'react';
 import type {Theme} from '@material-ui/core';
 
-import ControlPanelContextProvider from '~/components/control-panel/context-provider';
 import RoomInfo from '~/components/control-panel/rooms/room-info';
-
+import useAddRoom from '~/hooks/use-add-room';
 import {DEBOUNCE_DELAY_SLOW, GRID_SIZE} from '~/constants';
+import {roomsList, selectedRoomState} from '~/state/rooms-state';
 
-import type {AreaCtx, Position, RoomNode} from '~/interfaces';
+import type {Position, RoomNode} from '~/interfaces';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     root: {
@@ -38,14 +39,14 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }));
 
 interface ComponentProps {
-    areaCtx: AreaCtx;
     stageCoords: Position;
 }
 
-export const ControlPanel: FC<ComponentProps> = ({areaCtx, stageCoords}: ComponentProps) => {
+export const ControlPanel: FC<ComponentProps> = ({stageCoords}: ComponentProps) => {
     const [coords] = useDebounce(stageCoords, DEBOUNCE_DELAY_SLOW);
-
-    const {addRoom, rooms, selectedId} = areaCtx;
+    const rooms = useRecoilValue(roomsList);
+    const selectedId = useRecoilValue(selectedRoomState);
+    const addRoom = useAddRoom();
 
     const add = useCallback(
         () => {
@@ -71,40 +72,38 @@ export const ControlPanel: FC<ComponentProps> = ({areaCtx, stageCoords}: Compone
     );
 
     return (
-        <ControlPanelContextProvider areaCtx={areaCtx}>
-            <Card className={classes.root} variant="outlined">
-                <CardContent>
-                    <Typography variant="h4" component="h1" gutterBottom>
-                        AdamantiaMUD Area Maker
-                    </Typography>
-                    <hr className={classes.divider} />
-                    <Typography variant="h4" component="h3" gutterBottom>
-                        Area
-                    </Typography>
-                    <TextField
-                        fullWidth
-                        className={classes.areaName}
-                        label="Name"
-                        size="small"
-                    />
-                    <div className={classes.foo}>
-                        <Typography>{`Rooms: ${rooms.length}`}</Typography>
-                        <Button variant="outlined" onClick={add} size="small">
-                            Add Room
-                        </Button>
+        <Card className={classes.root} variant="outlined">
+            <CardContent>
+                <Typography variant="h4" component="h1" gutterBottom>
+                    AdamantiaMUD Area Maker
+                </Typography>
+                <hr className={classes.divider} />
+                <Typography variant="h4" component="h3" gutterBottom>
+                    Area
+                </Typography>
+                <TextField
+                    fullWidth
+                    className={classes.areaName}
+                    label="Name"
+                    size="small"
+                />
+                <div className={classes.foo}>
+                    <Typography>{`Rooms: ${rooms.length}`}</Typography>
+                    <Button variant="outlined" onClick={add} size="small">
+                        Add Room
+                    </Button>
+                </div>
+                {selectedRoom !== null && (
+                    <div key={selectedId}>
+                        <hr className={classes.divider} />
+                        <Typography variant="h5" component="h3" gutterBottom>
+                            Selected Room
+                        </Typography>
+                        <RoomInfo room={selectedRoom} />
                     </div>
-                    {selectedRoom !== null && (
-                        <React.Fragment>
-                            <hr className={classes.divider} />
-                            <Typography variant="h5" component="h3" gutterBottom>
-                                Selected Room
-                            </Typography>
-                            <RoomInfo room={selectedRoom} />
-                        </React.Fragment>
-                    )}
-                </CardContent>
-            </Card>
-        </ControlPanelContextProvider>
+                )}
+            </CardContent>
+        </Card>
     );
 };
 

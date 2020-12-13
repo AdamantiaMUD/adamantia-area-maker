@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import {createStyles, makeStyles} from '@material-ui/core/styles';
 import produce from 'immer';
 import invariant from 'tiny-invariant';
-import isEqual from 'react-fast-compare';
+import {useRecoilValue} from 'recoil';
 
 import type {Draft} from 'immer';
 import type {FC} from 'react';
@@ -19,9 +19,10 @@ import type {RoomDefinition} from '@adamantiamud/core';
 
 import DeleteRoomButton from '~/components/control-panel/rooms/delete-room-button';
 import RoomExitList from '~/components/control-panel/exits/room-exit-list';
-import {ControlPanelContext} from '~/components/control-panel/context-provider';
+import useUpdateRoom from '~/hooks/use-update-room';
+import {roomsList} from '~/state/rooms-state';
 
-import type {AreaCtx, RoomNode} from '~/interfaces';
+import type {RoomNode} from '~/interfaces';
 
 interface ComponentProps {
     room: RoomNode;
@@ -46,14 +47,13 @@ export const RoomInfo: FC<ComponentProps> = ({room}: ComponentProps) => {
     const [roomData, setRoomData] = useState<RoomDefinition>(room.roomDef);
     const classes = useStyles();
 
-    const areaCtx = useContext<AreaCtx | null>(ControlPanelContext);
-    invariant(areaCtx, 'This component must be used in the Control Panel');
+    const rooms = useRecoilValue(roomsList);
+    const updateRoom = useUpdateRoom();
 
-    const {rooms, updateRoom} = areaCtx;
     const {roomDef} = room;
 
     const isDirty = useMemo<boolean>(
-        () => !isEqual(roomData, roomDef),
+        () => roomData.title !== roomDef.title || roomData.description !== roomDef.description,
         [roomData, roomDef]
     );
 
@@ -78,7 +78,8 @@ export const RoomInfo: FC<ComponentProps> = ({room}: ComponentProps) => {
     const saveChanges = useCallback(
         () => {
             updateRoom(produce(room, (draft: Draft<RoomNode>) => {
-                draft.roomDef = {...roomData};
+                draft.roomDef.title = roomData.title;
+                draft.roomDef.description = roomData.description;
             }));
         },
         [

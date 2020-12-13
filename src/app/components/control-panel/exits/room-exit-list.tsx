@@ -2,6 +2,7 @@ import React from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Typography from '@material-ui/core/Typography';
 import {createStyles, makeStyles} from '@material-ui/core/styles';
 
 import type {FC} from 'react';
@@ -32,30 +33,38 @@ export const RoomExitList: FC<ComponentProps> = ({room}: ComponentProps) => {
         <List className={classes.root}>
             <ListItem>
                 <ListItemText
-                    primary="North"
+                    disableTypography
                     secondary={(<RoomExitDetails direction={ExitDirection.NORTH} room={room} />)}
-                />
+                >
+                    <Typography>North</Typography>
+                </ListItemText>
                 <AddRemoveExitButton direction={ExitDirection.NORTH} room={room} />
             </ListItem>
             <ListItem>
                 <ListItemText
-                    primary="East"
+                    disableTypography
                     secondary={(<RoomExitDetails direction={ExitDirection.EAST} room={room} />)}
-                />
+                >
+                    <Typography>East</Typography>
+                </ListItemText>
                 <AddRemoveExitButton direction={ExitDirection.EAST} room={room} />
             </ListItem>
             <ListItem>
                 <ListItemText
-                    primary="South"
+                    disableTypography
                     secondary={(<RoomExitDetails direction={ExitDirection.SOUTH} room={room} />)}
-                />
+                >
+                    <Typography>South</Typography>
+                </ListItemText>
                 <AddRemoveExitButton direction={ExitDirection.SOUTH} room={room} />
             </ListItem>
             <ListItem>
                 <ListItemText
-                    primary="West"
+                    disableTypography
                     secondary={(<RoomExitDetails direction={ExitDirection.WEST} room={room} />)}
-                />
+                >
+                    <Typography>West</Typography>
+                </ListItemText>
                 <AddRemoveExitButton direction={ExitDirection.WEST} room={room} />
             </ListItem>
         </List>

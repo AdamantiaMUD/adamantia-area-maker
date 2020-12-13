@@ -1,34 +1,22 @@
 import React from 'react';
 import {Layer} from 'react-konva';
+import {useRecoilValue} from 'recoil';
 
 import type {FC} from 'react';
 
 import Room from '~/components/control-panel/rooms/room';
 
-import type {AreaCtx, RoomNode} from '~/interfaces';
+import {roomsList} from '~/state/rooms-state';
 
-interface ComponentProps {
-    areaCtx: AreaCtx;
-}
+import type {RoomNode} from '~/interfaces';
 
-export const RoomLayer: FC<ComponentProps> = ({areaCtx}: ComponentProps) => {
-    const {
-        rooms,
-        selectedId,
-        setSelectedId,
-        updateRoom,
-    } = areaCtx;
+export const RoomLayer: FC = () => {
+    const rooms = useRecoilValue(roomsList);
 
     return (
         <Layer>
             {rooms.map((room: RoomNode) => (
-                <Room
-                    key={`${room.id}.${room.lastUpdate}`}
-                    isSelected={selectedId === room.id}
-                    node={room}
-                    selectRoom={setSelectedId}
-                    updateRoom={updateRoom}
-                />
+                <Room key={`${room.id}.${room.lastUpdate}`} node={room} />
             ))}
         </Layer>
     );

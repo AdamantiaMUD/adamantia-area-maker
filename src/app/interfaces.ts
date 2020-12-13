@@ -20,11 +20,6 @@ export interface RoomNode {
     lastUpdate: number;
 }
 
-export interface AreaCtx {
-    addRoom: (coords: Position) => void;
-    removeRoom: (roomId: string) => void;
-    rooms: RoomNode[];
-    selectedId: string;
-    setSelectedId: (id: string) => void;
-    updateRoom: (room: RoomNode) => void;
-}
+export type AddRoomFunc = (coords: Position) => void;
+export type RemoveRoomFunc = (roomId: string) => void;
+export type UpdateRoomFunc = (room: RoomNode) => void;
