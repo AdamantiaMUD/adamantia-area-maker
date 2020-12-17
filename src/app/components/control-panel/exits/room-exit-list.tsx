@@ -31,7 +31,7 @@ export const RoomExitList: FC<ComponentProps> = ({room}: ComponentProps) => {
 
     return (
         <List className={classes.root}>
-            <ListItem>
+            <ListItem alignItems="flex-start">
                 <ListItemText
                     disableTypography
                     secondary={(<RoomExitDetails direction={ExitDirection.NORTH} room={room} />)}
@@ -40,7 +40,7 @@ export const RoomExitList: FC<ComponentProps> = ({room}: ComponentProps) => {
                 </ListItemText>
                 <AddRemoveExitButton direction={ExitDirection.NORTH} room={room} />
             </ListItem>
-            <ListItem>
+            <ListItem alignItems="flex-start">
                 <ListItemText
                     disableTypography
                     secondary={(<RoomExitDetails direction={ExitDirection.EAST} room={room} />)}
@@ -49,7 +49,7 @@ export const RoomExitList: FC<ComponentProps> = ({room}: ComponentProps) => {
                 </ListItemText>
                 <AddRemoveExitButton direction={ExitDirection.EAST} room={room} />
             </ListItem>
-            <ListItem>
+            <ListItem alignItems="flex-start">
                 <ListItemText
                     disableTypography
                     secondary={(<RoomExitDetails direction={ExitDirection.SOUTH} room={room} />)}
@@ -58,7 +58,7 @@ export const RoomExitList: FC<ComponentProps> = ({room}: ComponentProps) => {
                 </ListItemText>
                 <AddRemoveExitButton direction={ExitDirection.SOUTH} room={room} />
             </ListItem>
-            <ListItem>
+            <ListItem alignItems="flex-start">
                 <ListItemText
                     disableTypography
                     secondary={(<RoomExitDetails direction={ExitDirection.WEST} room={room} />)}

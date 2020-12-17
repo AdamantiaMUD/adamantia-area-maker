@@ -1,5 +1,7 @@
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
 import {createStyles, makeStyles} from '@material-ui/core/styles';
 import produce from 'immer';
@@ -9,35 +11,37 @@ import type {AutocompleteProps, AutocompleteRenderInputParams} from '@material-u
 import type {FC, SyntheticEvent} from 'react';
 import type {Direction, RoomDefinition, RoomExitDefinition} from '@adamantiamud/core';
 import type {Draft} from 'immer';
-import type {Theme, Value} from '@material-ui/core';
+import type {Value} from '@material-ui/core';
 
-import useUpdateRoom from '~/hooks/use-update-room';
+import useUpdateRoomLink from '~/hooks/use-update-room-link';
+import useUpdateRooms from '~/hooks/use-update-rooms';
 import {cast} from '~/utils/fns';
-import {roomsList} from '~/state/rooms-state';
+import {getMirrorDirection} from '~/utils/directions';
+import {roomLinksState} from '~/state/room-links-state';
+import {roomsState, roomsList} from '~/state/rooms-state';
 
-import type {ExitDirection, RoomNode} from '~/interfaces';
+import type {ExitDirection, RoomLinkNode, RoomNode} from '~/interfaces';
 
 interface ComponentProps {
     direction: ExitDirection;
     room: RoomNode;
 }
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
+const useStyles = makeStyles(() => createStyles({
     root: {
         display: 'flex',
     },
     roomSelect: {
         flexGrow: 1,
     },
-    dirSelect: {
-        marginLeft: theme.spacing(2),
-        minWidth: '6rem',
-    },
 }));
 
 export const RoomExitDetails: FC<ComponentProps> = ({direction, room}: ComponentProps) => {
     const rooms = useRecoilValue(roomsList);
-    const updateRoom = useUpdateRoom();
+    const roomCache = useRecoilValue(roomsState);
+    const roomLinkCache = useRecoilValue(roomLinksState);
+    const updateRoomLink = useUpdateRoomLink();
+    const updateRooms = useUpdateRooms();
 
     const classes = useStyles();
 
@@ -62,11 +66,57 @@ export const RoomExitDetails: FC<ComponentProps> = ({direction, room}: Component
                 return undefined;
             }
 
-            const foundRoom = rooms.find((node: RoomNode) => node.roomDef.id === roomExit.roomId);
-
-            return foundRoom?.roomDef;
+            return roomCache[roomExit.roomId]?.roomDef;
         },
-        [roomExit, rooms]
+        [roomExit, roomCache]
+    );
+
+    const updateExitInfo = useCallback(
+        (exitIdx: number, targetId: string): void => {
+            const roomUpdates: RoomNode[] = [];
+
+            const roomLinkId = room.roomDef.exits![exitIdx].roomLinkId;
+            const prevTargetId = room.roomDef.exits![exitIdx].roomId;
+
+            if (prevTargetId !== room.id) {
+                roomUpdates.push(produce(roomCache[prevTargetId], (draft: Draft<RoomNode>) => {
+                    draft.roomDef.exits = draft.roomDef
+                        .exits
+                        ?.filter((exit: RoomExitDefinition) => exit.roomId !== room.id) ?? [];
+                }));
+            }
+
+            roomUpdates.push(produce(room, (draft: Draft<RoomNode>) => {
+                draft.roomDef.exits![exitIdx].roomId = targetId;
+            }));
+
+            if (targetId !== room.id) {
+                roomUpdates.push(produce(roomCache[targetId], (draft: Draft<RoomNode>) => {
+                    draft.roomDef.exits = draft.roomDef
+                        .exits
+                        ?.filter((exit: RoomExitDefinition) => exit.direction !== cast<Direction>(direction)) ?? [];
+
+                    draft.roomDef.exits.push({
+                        direction: cast<Direction>(getMirrorDirection(direction)),
+                        roomId: room.id,
+                        roomLinkId: roomLinkId,
+                    });
+                }));
+            }
+
+            updateRoomLink(produce(roomLinkCache[roomLinkId], (draft: Draft<RoomLinkNode>) => {
+                draft.toRoom = targetId;
+            }));
+            updateRooms(roomUpdates);
+        },
+        [
+            direction,
+            room,
+            roomCache,
+            roomLinkCache,
+            updateRoomLink,
+            updateRooms,
+        ]
     );
 
     if (roomExit === null) {
@@ -90,14 +140,27 @@ export const RoomExitDetails: FC<ComponentProps> = ({direction, room}: Component
                 .findIndex((exit: RoomExitDefinition) => exit.direction === cast<Direction>(direction));
 
             if (foundExitIdx > -1) {
-                updateRoom(produce(room, (draft: Draft<RoomNode>) => {
-                    draft.roomDef.exits![foundExitIdx].roomId = newValue.id;
-                }));
+                updateExitInfo(foundExitIdx, newValue.id);
             }
         },
     };
 
-    return (<Autocomplete {...roomSelectProps} />);
+    return (
+        <React.Fragment>
+            <Autocomplete {...roomSelectProps} />
+            <FormControlLabel
+                control={(
+                    <Checkbox
+                        checked={roomExit.oneWay ?? false}
+                        color="default"
+                        inputProps={{'aria-label': 'One-way exit'}}
+                    />
+                )}
+                label="One-way exit"
+                labelPlacement="end"
+            />
+        </React.Fragment>
+    );
 };
 
 export default RoomExitDetails;
