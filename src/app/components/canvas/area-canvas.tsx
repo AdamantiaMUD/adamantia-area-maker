@@ -12,6 +12,7 @@ import type {FC} from 'react';
 
 import BackgroundGrid from '~/components/canvas/background-grid';
 import ControlPanel from '~/components/control-panel/control-panel';
+import ExitLayer from '~/components/canvas/exits/exit-layer';
 import Portal from '~/components/general/portal';
 import RoomLayer from '~/components/canvas/rooms/room-layer';
 import {DEBOUNCE_DELAY_SLOW} from '~/constants';
@@ -66,6 +67,7 @@ const AreaCanvas: FC = () => {
                     <ControlPanel stageCoords={stageCoords} />
                 </Portal>
                 <RoomLayer />
+                <ExitLayer />
             </RecoilBridge>
         </Stage>
     );

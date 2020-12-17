@@ -4,7 +4,7 @@ import {useRecoilValue} from 'recoil';
 
 import type {FC} from 'react';
 
-import Room from '~/components/control-panel/rooms/room';
+import Room from '~/components/canvas/rooms/room';
 
 import {roomsList} from '~/state/rooms-state';
 
