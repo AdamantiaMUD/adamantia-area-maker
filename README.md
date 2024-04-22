@@ -1,3 +1,5 @@
+> Archived and code moved to https://github.com/AdamantiaMUD/adamantia[monorepo]
+
 # AdamantiaMUD Area Maker
 
 This repository contains the source code for an online area maker for the Adamantia MUD engine.
